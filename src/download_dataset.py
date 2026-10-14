@@ -147,8 +147,7 @@ def main() -> None:
     print("3/3 Sampling...")
     sample = table.sample(n=min(args.n_sample, len(table)), random_state=SEED)
     sample.to_parquet(data / "sample" / "constellaration_sample.parquet", index=False)
-    sample.to_csv(data / "sample" / "constellaration_sample.csv", index=False)
-    print(f"  sample: {sample.shape} -> data/sample/ (parquet + csv)")
+    print(f"  sample: {sample.shape} -> data/sample/constellaration_sample.parquet")
 
 
 if __name__ == "__main__":
