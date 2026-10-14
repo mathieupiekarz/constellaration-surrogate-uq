@@ -1,0 +1,12 @@
+[project]
+name = "proxima-constellaration"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "argparse>=1.4.0",
+    "huggingface-hub>=2.2.0",
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+    "pathlib>=1.0.1",
+    "pyarrow>=26.0.0",
+]

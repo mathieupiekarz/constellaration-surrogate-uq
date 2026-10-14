@@ -1,0 +1,14 @@
+# Data: too large for git (shards of 150-250 MB, GitHub refuses files > 100 MB).
+# Regenerate with: uv run python src/prepare_dataset.py
+data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
