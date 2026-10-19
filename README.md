@@ -130,7 +130,7 @@ Then open the notebooks in `notebooks/` with the `.venv` kernel. Random operatio
 ## References
 
 - S. A. Cadena, A. Merlo, et al., *ConStellaration: A dataset of QI-like stellarator plasma boundaries and
-  optimization benchmarks*, NeurIPS 2025 Datasets and Benchmarks Track, [arXiv:2506.19583](https://arxiv.org/abs/2506.19583).
+  optimization benchmarks*, NeurIPS 2025, [arXiv:2506.19583](https://arxiv.org/abs/2506.19583).
 - Dataset: [proxima-fusion/constellaration](https://huggingface.co/datasets/proxima-fusion/constellaration) on Hugging Face.
 - Code: [proximafusion/constellaration](https://github.com/proximafusion/constellaration).
 
