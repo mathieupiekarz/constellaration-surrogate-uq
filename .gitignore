@@ -1,7 +1,11 @@
 # Data: too large for git (shards of 150-250 MB, GitHub refuses files > 100 MB).
-# Regenerate with: uv run python src/prepare_dataset.py
+# Regenerate with: uv run python src/download_dataset.py
 data/
+# personal notes and course material, kept out of the public repo
 doc/
+# scratch notebooks
+notebooks/test_*
+Untitled*.ipynb
 
 # Python
 .venv/

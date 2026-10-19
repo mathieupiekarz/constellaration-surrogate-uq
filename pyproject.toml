@@ -1,12 +1,18 @@
 [project]
 name = "proxima-constellaration"
 version = "0.1.0"
+description = "Does a ConStellaration surrogate know when it is wrong? Uncertainty quantification for stellarator surrogate models."
+readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "argparse>=1.4.0",
     "huggingface-hub>=2.2.0",
+    "matplotlib>=3.11.2",
     "numpy>=2.5.4",
     "pandas>=3.0.6",
-    "pathlib>=1.0.1",
     "pyarrow>=26.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
 ]

@@ -4,11 +4,10 @@ Layout produced (everything under data/, which is git-ignored):
     data/raw/train-0000X-of-00003.parquet        untouched Hugging Face shards
     data/processed/constellaration.parquet       all rows, flattened Fourier coefficients
     data/sample/constellaration_sample.parquet   random subsample for fast experiments
-    data/sample/constellaration_sample.csv       same subsample, CSV (for a quick look only)
 
 Usage (from the project root):
-    uv run python src/prepare_dataset.py                 # download + process
-    uv run python src/prepare_dataset.py --n-sample 5000
+    uv run python src/download_dataset.py                 # download + process
+    uv run python src/download_dataset.py --n-sample 5000
 """
 
 import argparse
