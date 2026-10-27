@@ -6,6 +6,9 @@ doc/
 # scratch notebooks
 notebooks/test_*
 Untitled*.ipynb
+# training outputs: per-member predictions are large and regenerable; metric CSVs and logs are kept
+results/*.npz
+results/test_*
 
 # Python
 .venv/
