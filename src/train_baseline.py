@@ -15,7 +15,8 @@ Choices not specified by the paper (stated in the README):
 
 Outputs (in --out, default results/):
   baseline_<split><tag>_metrics.csv       per-target RMSE (z-scored and physical units) and R2 of the ensemble mean
-  baseline_<split><tag>_predictions.npz   per-member test predictions, reused later for the uncertainty metrics
+  baseline_<split><tag>_predictions.npz   per-member test AND validation predictions, reused later for the
+                                          uncertainty metrics (validation = calibration data for conformal prediction)
   baseline_<split><tag>_training_log.json settings, per-member history, ensemble train/validation MSE
 
 Usage:
@@ -23,6 +24,7 @@ Usage:
     uv run python src/train_baseline.py --n-members 2 --epochs 20   # quick check
     uv run python src/train_baseline.py --weight-decay 1e-4 --dropout 0.1 --tag _wd1e-4_do0.1
     uv run python src/train_baseline.py --threads 2                   # leave CPU cores free for other work
+    uv run python src/train_baseline.py --member-seed 1 --tag _s1     # same data split, other network seeds
 """
 
 import argparse
@@ -105,7 +107,10 @@ def main() -> None:
     p.add_argument("--patience", type=int, default=30)
     p.add_argument("--batch-size", type=int, default=256)
     p.add_argument("--lr", type=float, default=1e-3)
-    p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--seed", type=int, default=42, help="seed of the data split (RAND) and default network seeds")
+    p.add_argument("--member-seed", type=int, default=0,
+                   help="changes only the network seeds (initialisation, batch order), not the data split; "
+                        "0 reproduces the previous runs")
     p.add_argument("--schedule", default="plateau", choices=["plateau", "none"],
                    help="plateau: halve the learning rate when the validation loss stalls for 10 epochs")
     p.add_argument("--width", type=int, default=256, help="units per hidden layer")
@@ -143,7 +148,8 @@ def main() -> None:
     preds, preds_val, preds_fit, log = [], [], [], []
     for k in range(args.n_members):
         t0 = time.time()
-        model, hist = train_member(X_fit, y_fit, X_val, y_val, args.seed + 100 + k,
+        member_seed = args.seed + 100 + 1000 * args.member_seed + k
+        model, hist = train_member(X_fit, y_fit, X_val, y_val, member_seed,
                                    args.epochs, args.patience, args.batch_size, args.lr, args.schedule,
                                    args.width, args.depth, args.dropout, args.weight_decay)
         model.eval()
@@ -151,7 +157,7 @@ def main() -> None:
             preds.append(model(X_te).numpy())
             preds_val.append(model(X_val).numpy())
             preds_fit.append(model(X_fit).numpy())
-        log.append({"member": k, "epochs": len(hist), "best_val_mse": float(min(hist)), "seconds": time.time() - t0})
+        log.append({"member": k, "seed": member_seed, "epochs": len(hist), "best_val_mse": float(min(hist)), "seconds": time.time() - t0})
         print(f"  member {k}: {len(hist)} epochs, best validation MSE {min(hist):.4f}, {time.time() - t0:.0f} s")
 
     val_mse = float(np.mean((np.mean(preds_val, axis=0) - y_val.numpy())**2))   # ensemble, all targets
@@ -172,7 +178,8 @@ def main() -> None:
     metrics.to_csv(args.out / f"{name}_metrics.csv", index=False)
     np.savez_compressed(args.out / f"{name}_predictions.npz",
                         pred_z=P, y_true_z=yt, y_mu=y_mu.to_numpy(), y_sd=sd,
-                        test_index=np.asarray(test_idx), targets=np.array(D.TARGETS))
+                        test_index=np.asarray(test_idx), targets=np.array(D.TARGETS),
+                        pred_val_z=np.stack(preds_val), y_val_z=y_val.numpy(), val_index=np.asarray(val_idx))
     (args.out / f"{name}_training_log.json").write_text(json.dumps(
         {"args": {k: str(v) for k, v in vars(args).items()}, "ensemble_train_mse": fit_mse,
          "ensemble_val_mse": val_mse, "members": log}, indent=1))
