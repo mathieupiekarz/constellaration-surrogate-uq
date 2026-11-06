@@ -12,8 +12,9 @@ It builds on the open [ConStellaration](https://arxiv.org/abs/2506.19583) datase
 Proxima Fusion ([dataset](https://huggingface.co/datasets/proxima-fusion/constellaration),
 [code](https://github.com/proximafusion/constellaration)).
 
-> **Status (October 2026): work in progress.** Data pipeline and exploration are done; model training and
-> uncertainty evaluation are next. Numbers below come from the notebooks in this repository.
+> **Status (November 2026): work in progress.** Data pipeline, exploration and the baseline surrogate are done;
+> uncertainty evaluation is next. Numbers below come from the notebooks, `results/` and `analysis/` in this
+> repository.
 
 ## The problem in one picture
 
@@ -49,8 +50,9 @@ extrapolate, and it needs to know when the surrogate stops being trustworthy.
 | Shared cleaning and paper-baseline filter (`src/data.py`) | done |
 | Exploration: rotational transform, generation methods, failures, targets (notebooks 01, 02) | done |
 | OOD splits defined and their distance to the training set measured | done |
-| Reproduce the paper's surrogate: ensemble of 10 MLPs (3 × 256, tanh) | next |
-| Uncertainty metrics: NLL, 90/95 % coverage, interval width, uncertainty–error correlation | planned |
+| Reproduce the paper's surrogate: ensemble of MLPs (3 × 256, tanh) | done |
+| Hyperparameter search, run-to-run noise, final 20-network ensembles ([details](analysis/model_selection.md)) | done |
+| Uncertainty metrics: NLL, 90/95 % coverage, interval width, uncertainty–error correlation | next |
 | Compare deep ensemble, MC Dropout, conformal prediction (GP optional) on every split | planned |
 | Final figures, results and limitations in this README | planned |
 
@@ -72,6 +74,33 @@ extrapolate, and it needs to know when the surrogate stops being trustworthy.
 - **Rotational transform:** 6.4 % of the configurations have a negative $\iota$ (sign = twist direction,
   never changes between axis and edge); in 39 % of them $|\iota|$ decreases from axis to edge.
   Only 35.7 % satisfy $|\iota_{edge}|/N_{fp} \ge 0.25$, from 52 % at NFP = 3 to 15 % at NFP = 4–5.
+
+## Baseline surrogate (RAND split)
+
+Each surrogate is an ensemble of 20 MLPs (tanh, AdamW, early stopping on a validation set), trained on the
+paper's baseline subset with a random 80/20 split (19,258 training, 2,139 validation, 5,349 test shapes).
+Inputs and targets are z-scored, so an MSE of 1 means "no better than predicting the mean".
+
+| model | architecture | weight decay | validation MSE | test R², 11 metrics | test R², gradient scale length |
+|---|---|---|---|---|---|
+| paper reproduction | 3 × 256 | 0 | 0.0508 | 0.936 – 0.990 | 0.757 |
+| **A (reference)** | 5 × 256 | 0.1 | **0.0449** | 0.945 – 0.992 | 0.759 |
+| B (comparison) | 6 × 256 | 0.2 | 0.0457 | 0.943 – 0.993 | 0.756 |
+
+- **A deeper, regularised network is 12 % better than the paper's architecture** on validation, far above the
+  measured run-to-run noise (≈ 0.001), and better on 11 of the 12 test metrics (6.5 to 15 % lower RMSE).
+- **A and B are statistically indistinguishable** (5 seeds each at $K = 3$: 0.0493 ± 0.0008 vs
+  0.0485 ± 0.0010, difference 1.5 standard errors). A is the reference because it is smaller; B is kept because
+  its networks disagree less with each other, which should give narrower uncertainty intervals.
+- **The remaining error is bias, not variance:** fitting $	ext{MSE}_K = a + b/K$ gives a floor $a = 0.044$
+  for A, so adding networks beyond 20 would not help.
+- **We do not reach the paper's reported accuracy** ($R^2 > 0.97$ for every metric). The minimum normalised
+  magnetic gradient scale length stays at $R^2 pprox 0.76$ for every architecture tried: it is a minimum over
+  the surface, which can jump when its location moves.
+
+How these models were chosen, with every table and every calculation (noise measurement, thresholds,
+statistical tests): [`analysis/model_selection.md`](analysis/model_selection.md)
+([PDF](analysis/model_selection.pdf)).
 
 ## Out-of-distribution splits
 
@@ -98,9 +127,13 @@ src/
   download_dataset.py   download the 'default' subset from Hugging Face, build data/processed and data/sample
   data.py               shared cleaning, paper-baseline filter; `python src/data.py` caches the filtered subset
   inspect_parquet.py    inspect parquet files: schema, row counts, missing values, size on disk
+  train_baseline.py     train an ensemble of MLPs on the RAND split; saves metrics, predictions and a training log
 notebooks/
   01_iota_exploration.ipynb      rotational transform: shear, A/iota consistency, benchmark constraint
   02_dataset_exploration.ipynb   methods x NFP, failures, baseline subset, targets, inputs, OOD splits
+analysis/
+  model_selection.md    how the baseline surrogate was chosen, with all calculations (also as PDF)
+results/                metrics (.csv) and training logs (.json) of every run; predictions (.npz) are git-ignored
 data/                   (git-ignored) raw shards, processed table, samples
 ```
 
@@ -114,7 +147,16 @@ uv run python src/download_dataset.py      # ~610 MB download, builds data/proce
 uv run python src/data.py                  # optional: cache the paper-baseline subset
 ```
 
-Then open the notebooks in `notebooks/` with the `.venv` kernel. Random operations use fixed seeds.
+Then open the notebooks in `notebooks/` with the `.venv` kernel. To train the three final surrogates
+(about 20 min to 1 h each on a laptop CPU):
+
+```bash
+uv run python src/train_baseline.py --n-members 20 --depth 5 --width 256 --weight-decay 1e-1 --tag _A_final
+uv run python src/train_baseline.py --n-members 20 --depth 6 --width 256 --weight-decay 2e-1 --tag _B_final
+uv run python src/train_baseline.py --n-members 20 --tag _paper
+```
+
+Random operations use fixed seeds: rerunning a command on CPU gives the same numbers.
 
 ## Known limitations
 
@@ -124,6 +166,8 @@ Then open the notebooks in `notebooks/` with the `.venv` kernel. Random operatio
   its test set is biased towards "easy" NAE shapes.
 - In NFP4, NFP is constant during training, so the model cannot learn its effect: the split measures how a
   model behaves when the input–output relation changes, not a generalisation in NFP.
+- Hyperparameters were searched on depth, width, dropout and weight decay only, about 25 settings on one
+  validation set; learning rate, batch size and activation were not tuned.
 - The nearest-neighbour distance is a Euclidean distance in 81 dimensions; it says nothing about which
   coefficients matter physically.
 
