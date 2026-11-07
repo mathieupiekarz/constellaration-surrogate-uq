@@ -1,0 +1,164 @@
+{
+ "args": {
+  "split": "RAND",
+  "n_members": "20",
+  "epochs": "500",
+  "patience": "30",
+  "batch_size": "256",
+  "lr": "0.001",
+  "seed": "42",
+  "member_seed": "0",
+  "schedule": "plateau",
+  "width": "256",
+  "depth": "5",
+  "dropout": "0.0",
+  "weight_decay": "0.1",
+  "threads": "0",
+  "tag": "_A_final",
+  "out": "C:\\Users\\mathi\\proxima_constellaration\\results"
+ },
+ "ensemble_train_mse": 0.007127618417143822,
+ "ensemble_val_mse": 0.04486308619379997,
+ "members": [
+  {
+   "member": 0,
+   "seed": 142,
+   "epochs": 140,
+   "best_val_mse": 0.061809077858924866,
+   "seconds": 108.99188733100891
+  },
+  {
+   "member": 1,
+   "seed": 143,
+   "epochs": 140,
+   "best_val_mse": 0.06227666884660721,
+   "seconds": 107.36261200904846
+  },
+  {
+   "member": 2,
+   "seed": 144,
+   "epochs": 182,
+   "best_val_mse": 0.05954774096608162,
+   "seconds": 149.14717030525208
+  },
+  {
+   "member": 3,
+   "seed": 145,
+   "epochs": 185,
+   "best_val_mse": 0.060754138976335526,
+   "seconds": 160.34793257713318
+  },
+  {
+   "member": 4,
+   "seed": 146,
+   "epochs": 184,
+   "best_val_mse": 0.06301360577344894,
+   "seconds": 170.5228145122528
+  },
+  {
+   "member": 5,
+   "seed": 147,
+   "epochs": 169,
+   "best_val_mse": 0.0618438757956028,
+   "seconds": 135.73529982566833
+  },
+  {
+   "member": 6,
+   "seed": 148,
+   "epochs": 156,
+   "best_val_mse": 0.062217049300670624,
+   "seconds": 125.72353029251099
+  },
+  {
+   "member": 7,
+   "seed": 149,
+   "epochs": 165,
+   "best_val_mse": 0.06245959550142288,
+   "seconds": 205.86584877967834
+  },
+  {
+   "member": 8,
+   "seed": 150,
+   "epochs": 139,
+   "best_val_mse": 0.061575114727020264,
+   "seconds": 194.8413622379303
+  },
+  {
+   "member": 9,
+   "seed": 151,
+   "epochs": 141,
+   "best_val_mse": 0.06166267767548561,
+   "seconds": 195.38287568092346
+  },
+  {
+   "member": 10,
+   "seed": 152,
+   "epochs": 131,
+   "best_val_mse": 0.0636829063296318,
+   "seconds": 156.42003774642944
+  },
+  {
+   "member": 11,
+   "seed": 153,
+   "epochs": 98,
+   "best_val_mse": 0.0633409172296524,
+   "seconds": 58.771503925323486
+  },
+  {
+   "member": 12,
+   "seed": 154,
+   "epochs": 160,
+   "best_val_mse": 0.06204461306333542,
+   "seconds": 107.51054787635803
+  },
+  {
+   "member": 13,
+   "seed": 155,
+   "epochs": 151,
+   "best_val_mse": 0.06166420131921768,
+   "seconds": 197.41734981536865
+  },
+  {
+   "member": 14,
+   "seed": 156,
+   "epochs": 163,
+   "best_val_mse": 0.061463434249162674,
+   "seconds": 224.57870721817017
+  },
+  {
+   "member": 15,
+   "seed": 157,
+   "epochs": 147,
+   "best_val_mse": 0.06110735237598419,
+   "seconds": 199.45785117149353
+  },
+  {
+   "member": 16,
+   "seed": 158,
+   "epochs": 165,
+   "best_val_mse": 0.06202066317200661,
+   "seconds": 223.3770034313202
+  },
+  {
+   "member": 17,
+   "seed": 159,
+   "epochs": 174,
+   "best_val_mse": 0.062259115278720856,
+   "seconds": 320.3936173915863
+  },
+  {
+   "member": 18,
+   "seed": 160,
+   "epochs": 156,
+   "best_val_mse": 0.061406273394823074,
+   "seconds": 214.34819173812866
+  },
+  {
+   "member": 19,
+   "seed": 161,
+   "epochs": 157,
+   "best_val_mse": 0.06215554475784302,
+   "seconds": 166.9790825843811
+  }
+ ]
+}

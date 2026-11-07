@@ -1,0 +1,45 @@
+{
+ "args": {
+  "split": "RAND",
+  "n_members": "3",
+  "epochs": "500",
+  "patience": "30",
+  "batch_size": "256",
+  "lr": "0.001",
+  "seed": "42",
+  "member_seed": "3",
+  "schedule": "plateau",
+  "width": "256",
+  "depth": "6",
+  "dropout": "0.0",
+  "weight_decay": "0.2",
+  "threads": "0",
+  "tag": "_6x256_wd2e-1_s3",
+  "out": "C:\\Users\\mathi\\proxima_constellaration\\results"
+ },
+ "ensemble_train_mse": 0.011484350077807903,
+ "ensemble_val_mse": 0.04778323322534561,
+ "members": [
+  {
+   "member": 0,
+   "seed": 3142,
+   "epochs": 189,
+   "best_val_mse": 0.05511735379695892,
+   "seconds": 311.7441072463989
+  },
+  {
+   "member": 1,
+   "seed": 3143,
+   "epochs": 198,
+   "best_val_mse": 0.057335395365953445,
+   "seconds": 363.91381454467773
+  },
+  {
+   "member": 2,
+   "seed": 3144,
+   "epochs": 206,
+   "best_val_mse": 0.05610281601548195,
+   "seconds": 674.6392846107483
+  }
+ ]
+}

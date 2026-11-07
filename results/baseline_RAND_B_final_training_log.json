@@ -1,0 +1,164 @@
+{
+ "args": {
+  "split": "RAND",
+  "n_members": "20",
+  "epochs": "500",
+  "patience": "30",
+  "batch_size": "256",
+  "lr": "0.001",
+  "seed": "42",
+  "member_seed": "0",
+  "schedule": "plateau",
+  "width": "256",
+  "depth": "6",
+  "dropout": "0.0",
+  "weight_decay": "0.2",
+  "threads": "0",
+  "tag": "_B_final",
+  "out": "C:\\Users\\mathi\\proxima_constellaration\\results"
+ },
+ "ensemble_train_mse": 0.010870786383748055,
+ "ensemble_val_mse": 0.04567563161253929,
+ "members": [
+  {
+   "member": 0,
+   "seed": 142,
+   "epochs": 185,
+   "best_val_mse": 0.05677978694438934,
+   "seconds": 157.01200675964355
+  },
+  {
+   "member": 1,
+   "seed": 143,
+   "epochs": 172,
+   "best_val_mse": 0.05710736662149429,
+   "seconds": 134.32313060760498
+  },
+  {
+   "member": 2,
+   "seed": 144,
+   "epochs": 184,
+   "best_val_mse": 0.05685720592737198,
+   "seconds": 143.6059103012085
+  },
+  {
+   "member": 3,
+   "seed": 145,
+   "epochs": 201,
+   "best_val_mse": 0.0596456415951252,
+   "seconds": 159.67943835258484
+  },
+  {
+   "member": 4,
+   "seed": 146,
+   "epochs": 228,
+   "best_val_mse": 0.05432039871811867,
+   "seconds": 186.90808367729187
+  },
+  {
+   "member": 5,
+   "seed": 147,
+   "epochs": 199,
+   "best_val_mse": 0.057199738919734955,
+   "seconds": 162.02524948120117
+  },
+  {
+   "member": 6,
+   "seed": 148,
+   "epochs": 169,
+   "best_val_mse": 0.06011510640382767,
+   "seconds": 137.5173783302307
+  },
+  {
+   "member": 7,
+   "seed": 149,
+   "epochs": 217,
+   "best_val_mse": 0.05885254219174385,
+   "seconds": 945.0702307224274
+  },
+  {
+   "member": 8,
+   "seed": 150,
+   "epochs": 169,
+   "best_val_mse": 0.05699048936367035,
+   "seconds": 123.7434184551239
+  },
+  {
+   "member": 9,
+   "seed": 151,
+   "epochs": 195,
+   "best_val_mse": 0.0577099472284317,
+   "seconds": 145.61978197097778
+  },
+  {
+   "member": 10,
+   "seed": 152,
+   "epochs": 175,
+   "best_val_mse": 0.05668698996305466,
+   "seconds": 136.88430428504944
+  },
+  {
+   "member": 11,
+   "seed": 153,
+   "epochs": 193,
+   "best_val_mse": 0.056227970868349075,
+   "seconds": 151.92863178253174
+  },
+  {
+   "member": 12,
+   "seed": 154,
+   "epochs": 188,
+   "best_val_mse": 0.057120099663734436,
+   "seconds": 144.85100269317627
+  },
+  {
+   "member": 13,
+   "seed": 155,
+   "epochs": 175,
+   "best_val_mse": 0.060089971870183945,
+   "seconds": 139.45884227752686
+  },
+  {
+   "member": 14,
+   "seed": 156,
+   "epochs": 173,
+   "best_val_mse": 0.057446423918008804,
+   "seconds": 137.38328552246094
+  },
+  {
+   "member": 15,
+   "seed": 157,
+   "epochs": 179,
+   "best_val_mse": 0.05856204032897949,
+   "seconds": 141.97522401809692
+  },
+  {
+   "member": 16,
+   "seed": 158,
+   "epochs": 192,
+   "best_val_mse": 0.05708305165171623,
+   "seconds": 151.64257955551147
+  },
+  {
+   "member": 17,
+   "seed": 159,
+   "epochs": 174,
+   "best_val_mse": 0.057897429913282394,
+   "seconds": 137.1275384426117
+  },
+  {
+   "member": 18,
+   "seed": 160,
+   "epochs": 191,
+   "best_val_mse": 0.05837662145495415,
+   "seconds": 148.51406168937683
+  },
+  {
+   "member": 19,
+   "seed": 161,
+   "epochs": 183,
+   "best_val_mse": 0.05925802141427994,
+   "seconds": 147.26049041748047
+  }
+ ]
+}

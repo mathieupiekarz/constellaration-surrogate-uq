@@ -1,0 +1,75 @@
+{
+ "args": {
+  "split": "RAND",
+  "n_members": "10",
+  "epochs": "500",
+  "patience": "30",
+  "batch_size": "256",
+  "lr": "0.001",
+  "seed": "42",
+  "schedule": "plateau",
+  "out": "C:\\Users\\mathi\\proxima_constellaration\\results"
+ },
+ "members": [
+  {
+   "member": 0,
+   "epochs": 114,
+   "best_val_mse": 0.07360339909791946,
+   "seconds": 44.473265409469604
+  },
+  {
+   "member": 1,
+   "epochs": 99,
+   "best_val_mse": 0.07624931633472443,
+   "seconds": 37.0363667011261
+  },
+  {
+   "member": 2,
+   "epochs": 104,
+   "best_val_mse": 0.07354191690683365,
+   "seconds": 42.35958957672119
+  },
+  {
+   "member": 3,
+   "epochs": 91,
+   "best_val_mse": 0.07562495023012161,
+   "seconds": 37.37373900413513
+  },
+  {
+   "member": 4,
+   "epochs": 99,
+   "best_val_mse": 0.07496791332960129,
+   "seconds": 41.1944580078125
+  },
+  {
+   "member": 5,
+   "epochs": 91,
+   "best_val_mse": 0.07392621785402298,
+   "seconds": 39.51702523231506
+  },
+  {
+   "member": 6,
+   "epochs": 113,
+   "best_val_mse": 0.07651358842849731,
+   "seconds": 46.623149394989014
+  },
+  {
+   "member": 7,
+   "epochs": 96,
+   "best_val_mse": 0.0759996622800827,
+   "seconds": 39.581767559051514
+  },
+  {
+   "member": 8,
+   "epochs": 109,
+   "best_val_mse": 0.076004758477211,
+   "seconds": 44.11271405220032
+  },
+  {
+   "member": 9,
+   "epochs": 119,
+   "best_val_mse": 0.07282961905002594,
+   "seconds": 48.4475040435791
+  }
+ ]
+}
