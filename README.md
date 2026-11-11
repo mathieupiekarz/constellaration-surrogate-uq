@@ -12,8 +12,8 @@ It builds on the open [ConStellaration](https://arxiv.org/abs/2506.19583) datase
 Proxima Fusion ([dataset](https://huggingface.co/datasets/proxima-fusion/constellaration),
 [code](https://github.com/proximafusion/constellaration)).
 
-> **Status (November 2026): work in progress.** Data pipeline, exploration and the baseline surrogate are done;
-> uncertainty evaluation is next. Numbers below come from the notebooks, `results/` and `analysis/` in this
+> **Status (November 2026): work in progress.** Data pipeline, exploration, the baseline surrogate and its
+> uncertainty on the random split are done; out-of-distribution splits and other uncertainty methods are next. Numbers below come from the notebooks, `results/` and `analysis/` in this
 > repository.
 
 ## The problem in one picture
@@ -52,7 +52,7 @@ extrapolate, and it needs to know when the surrogate stops being trustworthy.
 | OOD splits defined and their distance to the training set measured | done |
 | Reproduce the paper's surrogate: ensemble of MLPs (3 × 256, tanh) | done |
 | Hyperparameter search, run-to-run noise, final 20-network ensembles ([details](analysis/model_selection.md)) | done |
-| Uncertainty metrics: NLL, 90/95 % coverage, interval width, uncertainty–error correlation | next |
+| Uncertainty metrics on RAND: NLL, 90/95 % coverage, interval width, uncertainty–error correlation | done |
 | Compare deep ensemble, MC Dropout, conformal prediction (GP optional) on every split | planned |
 | Final figures, results and limitations in this README | planned |
 
@@ -102,6 +102,33 @@ How these models were chosen, with every table and every calculation (noise meas
 statistical tests): [`analysis/model_selection.md`](analysis/model_selection.md)
 ([PDF](analysis/model_selection.pdf)).
 
+## Uncertainty on the RAND split
+
+Does the ensemble know when it is wrong? Each ensemble predicts the mean of its 20 networks and uses their
+standard deviation σ as uncertainty. Measured on the 5,349 test shapes ([notebook 03](notebooks/03_uq_rand.ipynb),
+`src/uq_metrics.py`):
+
+| K = 20 | paper | A | B |
+|---|---|---|---|
+| RMSE (z-scored, mean of 12 targets) | 0.214 | **0.197** | 0.198 |
+| coverage of the 90 % interval | **0.867** | 0.793 | 0.705 |
+| std of (y − μ) / σ (ideal 1) | **1.18** | 1.44 | 1.80 |
+| Spearman(σ, \|error\|) | 0.514 | **0.521** | 0.501 |
+
+![Error vs announced uncertainty](figures/uq_rand_error_vs_sigma.png)
+
+- **σ ranks the shapes correctly:** the error rises steadily with σ for all three models, so the surrogate
+  knows *where* it is likely to be wrong.
+- **σ is too small:** all ensembles are over-confident. The ensemble only sees the disagreement between its
+  networks, not the error they share; weight decay makes the networks agree more than it makes them right,
+  so the more accurate models (A, B) are the less honest.
+- **The errors are heavy-tailed:** most errors are smaller than σ, a few are much larger (calibration curves in
+  [figures/](figures/uq_rand_calibration.png)), so rescaling σ by a single factor will not be enough everywhere.
+- **More networks help the uncertainty, not the prediction:** coverage still rises between 10 (the paper's
+  choice) and 20 networks.
+- **Next:** recalibration and conformal prediction fitted on the validation set, then the same metrics on the
+  out-of-distribution splits.
+
 ## Out-of-distribution splits
 
 The paper evaluates its surrogate on a random 80/20 split only. The splits below are ours; for each one we
@@ -128,11 +155,14 @@ src/
   data.py               shared cleaning, paper-baseline filter; `python src/data.py` caches the filtered subset
   inspect_parquet.py    inspect parquet files: schema, row counts, missing values, size on disk
   train_baseline.py     train an ensemble of MLPs on the RAND split; saves metrics, predictions and a training log
+  uq_metrics.py         score the uncertainty of trained ensembles (coverage, width, NLL, z-std, Spearman, calibration)
 notebooks/
   01_iota_exploration.ipynb      rotational transform: shear, A/iota consistency, benchmark constraint
   02_dataset_exploration.ipynb   methods x NFP, failures, baseline subset, targets, inputs, OOD splits
+  03_uq_rand.ipynb               calibration of the ensembles on the RAND split (figures in figures/)
 analysis/
   model_selection.md    how the baseline surrogate was chosen, with all calculations (also as PDF)
+figures/                figures used in this README
 results/                metrics (.csv) and training logs (.json) of every run; predictions (.npz) are git-ignored
 data/                   (git-ignored) raw shards, processed table, samples
 ```
